@@ -17,7 +17,7 @@ namespace QLXM
 {
     public partial class FrmBaoCaoTopSanPhamDuocTieuThu : Form
     {
-        public FrmBaoCaoTopSanPhamTieuThu()
+        public FrmBaoCaoTopSanPhamDuocTieuThu()
         {
             InitializeComponent();
         }
