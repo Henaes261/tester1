@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using System.Data.SqlClient;
 using System.Collections.Generic;
 using System.Linq;
+using System.Drawing.Printing;
 
 namespace QLXM
 {
@@ -200,9 +201,140 @@ namespace QLXM
                 return;
             }
             
-            // Code in báo cáo sẽ được thêm sau
-            MessageBox.Show("Chức năng in báo cáo đang được phát triển!", "Thông báo", 
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
+            try
+            {
+                // Tạo đối tượng PrintDocument để điều khiển quá trình in
+                PrintDocument printDocument = new PrintDocument();
+                
+                // Thiết lập giấy A4
+                printDocument.DefaultPageSettings.PaperSize = new PaperSize("A4", 827, 1169);
+                printDocument.DefaultPageSettings.Margins = new Margins(50, 50, 50, 50);
+                
+                // Đăng ký sự kiện để vẽ nội dung khi in
+                printDocument.PrintPage += new PrintPageEventHandler(PrintPage);
+                
+                // Tạo đối tượng PrintPreviewDialog để hiển thị xem trước
+                PrintPreviewDialog printPreviewDialog = new PrintPreviewDialog();
+                printPreviewDialog.Document = printDocument;
+                
+                // Thiết lập các thuộc tính của cửa sổ xem trước
+                printPreviewDialog.StartPosition = FormStartPosition.CenterScreen;
+                printPreviewDialog.ClientSize = new Size(800, 600);
+                
+                // Thiết lập kích thước cửa sổ xem trước
+                printPreviewDialog.AutoScaleDimensions = new SizeF(6F, 13F);
+                printPreviewDialog.AutoScaleMode = AutoScaleMode.Font;
+                
+                // Hiển thị cửa sổ xem trước
+                printPreviewDialog.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi khi hiển thị bản xem trước: " + ex.Message, "Lỗi", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        // Thêm phương thức PrintPage để vẽ nội dung khi in
+        private void PrintPage(object sender, PrintPageEventArgs e)
+        {
+            try
+            {
+                // Thiết lập font chữ và màu sắc
+                Font titleFont = new Font("Arial", 18, FontStyle.Bold);
+                Font headerFont = new Font("Arial", 14, FontStyle.Bold);
+                Font normalFont = new Font("Arial", 12);
+                Font boldFont = new Font("Arial", 12, FontStyle.Bold);
+                Brush brush = Brushes.Black;
+                
+                // Thiết lập vị trí bắt đầu
+                float y = 50;
+                float x = 50;
+                float width = e.PageBounds.Width - 100;
+                
+                // In tiêu đề báo cáo
+                string title = "BÁO CÁO KẾT QUẢ HOẠT ĐỘNG KINH DOANH";
+                e.Graphics.DrawString(title, titleFont, brush, new RectangleF(x, y, width, 30), new StringFormat() { Alignment = StringAlignment.Center });
+                y += 40;
+                
+                // In thông tin thời gian báo cáo
+                string period = "Từ ngày: " + dtpTuNgay.Value.ToString("dd/MM/yyyy") + " đến ngày: " + dtpDenNgay.Value.ToString("dd/MM/yyyy");
+                e.Graphics.DrawString(period, headerFont, brush, new RectangleF(x, y, width, 25), new StringFormat() { Alignment = StringAlignment.Center });
+                y += 40;
+                
+                // Thiết lập chiều rộng cột
+                float dateWidth = 100;
+                float numberWidth = (width - dateWidth) / 3;
+                
+                // In tiêu đề cột
+                e.Graphics.DrawString("Ngày", boldFont, brush, x, y);
+                e.Graphics.DrawString("Doanh Thu", boldFont, brush, x + dateWidth, y);
+                e.Graphics.DrawString("Chi Phí", boldFont, brush, x + dateWidth + numberWidth, y);
+                e.Graphics.DrawString("Lợi Nhuận", boldFont, brush, x + dateWidth + 2 * numberWidth, y);
+                y += 25;
+                
+                // Vẽ đường kẻ ngang
+                e.Graphics.DrawLine(Pens.Black, x, y - 5, x + width, y - 5);
+                
+                // In dữ liệu từ DataGridView
+                foreach (DataGridViewRow row in dgvBaoCaoKQKD.Rows)
+                {
+                    if (row.Cells["NgayGD"].Value != null)
+                    {
+                        // Ngày
+                        DateTime ngay = Convert.ToDateTime(row.Cells["NgayGD"].Value);
+                        e.Graphics.DrawString(ngay.ToString("dd/MM/yyyy"), normalFont, brush, x, y);
+                        
+                        // Doanh thu
+                        decimal doanhThu = Convert.ToDecimal(row.Cells["DoanhThu"].Value);
+                        e.Graphics.DrawString(doanhThu.ToString("N0"), normalFont, brush, x + dateWidth + numberWidth - e.Graphics.MeasureString(doanhThu.ToString("N0"), normalFont).Width, y);
+                        
+                        // Chi phí
+                        decimal chiPhi = Convert.ToDecimal(row.Cells["ChiPhi"].Value);
+                        e.Graphics.DrawString(chiPhi.ToString("N0"), normalFont, brush, x + dateWidth + 2 * numberWidth - e.Graphics.MeasureString(chiPhi.ToString("N0"), normalFont).Width, y);
+                        
+                        // Lợi nhuận
+                        decimal loiNhuan = Convert.ToDecimal(row.Cells["LoiNhuan"].Value);
+                        e.Graphics.DrawString(loiNhuan.ToString("N0"), normalFont, brush, x + dateWidth + 3 * numberWidth - e.Graphics.MeasureString(loiNhuan.ToString("N0"), normalFont).Width, y);
+                        
+                        y += 25;
+                        
+                        // Kiểm tra nếu đã hết trang
+                        if (y > e.MarginBounds.Bottom - 150)
+                        {
+                            e.HasMorePages = true;
+                            return;
+                        }
+                    }
+                }
+                
+                // Vẽ đường kẻ ngang trước tổng cộng
+                e.Graphics.DrawLine(Pens.Black, x, y, x + width, y);
+                y += 10;
+                
+                // In dòng tổng cộng
+                e.Graphics.DrawString("TỔNG CỘNG:", boldFont, brush, x, y);
+                
+                // Tổng doanh thu
+                decimal tongDoanhThu = decimal.Parse(txtTongDoanhThu.Text.Replace(",", ""));
+                e.Graphics.DrawString(tongDoanhThu.ToString("N0"), boldFont, brush, x + dateWidth + numberWidth - e.Graphics.MeasureString(tongDoanhThu.ToString("N0"), boldFont).Width, y);
+                
+                // Tổng chi phí
+                decimal tongChiPhi = decimal.Parse(txtTongChiPhi.Text.Replace(",", ""));
+                e.Graphics.DrawString(tongChiPhi.ToString("N0"), boldFont, brush, x + dateWidth + 2 * numberWidth - e.Graphics.MeasureString(tongChiPhi.ToString("N0"), boldFont).Width, y);
+                
+                // Tổng lợi nhuận
+                decimal tongLoiNhuan = decimal.Parse(txtTongLoiNhuan.Text.Replace(",", ""));
+                e.Graphics.DrawString(tongLoiNhuan.ToString("N0"), boldFont, brush, x + dateWidth + 3 * numberWidth - e.Graphics.MeasureString(tongLoiNhuan.ToString("N0"), boldFont).Width, y);
+                
+                // Đã hoàn thành, không cần in thêm trang nào nữa
+                e.HasMorePages = false;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi khi tạo bản in: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                e.HasMorePages = false;
+            }
         }
         
         private void btnDong_Click(object sender, EventArgs e)
