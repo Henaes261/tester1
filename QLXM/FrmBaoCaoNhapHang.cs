@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Windows.Forms;
@@ -62,7 +62,7 @@ namespace QLXM
 
         private void LoadCombos()
         {
-            using (SqlConnection conn = new SqlConnection(Function.ConnectString))
+            using (SqlConnection conn = new SqlConnection(Function.connectionString))
             {
                 conn.Open();
 
@@ -98,7 +98,7 @@ namespace QLXM
 
         private void LoadDataHoaDonNhap()
         {
-            using (SqlConnection conn = new SqlConnection(Function.ConnectString))
+            using (SqlConnection conn = new SqlConnection(Function.connectionString))
             {
                 conn.Open();
 
@@ -155,7 +155,7 @@ namespace QLXM
 
         private void LoadDataChiTietHang()
         {
-            using (SqlConnection conn = new SqlConnection(Function.ConnectString))
+            using (SqlConnection conn = new SqlConnection(Function.connectionString))
             {
                 conn.Open();
 
@@ -276,7 +276,7 @@ namespace QLXM
 
         private void LoadChiTietHangTheoHoaDon(string sohdn)
         {
-            using (SqlConnection conn = new SqlConnection(Function.ConnectString))
+            using (SqlConnection conn = new SqlConnection(Function.connectionString))
             {
                 conn.Open();
 
@@ -306,7 +306,7 @@ namespace QLXM
             if (!string.IsNullOrWhiteSpace(inputSoHD))
             {
                 // Tìm kiếm hóa đơn theo số nhập vào
-                using (SqlConnection conn = new SqlConnection(Function.ConnectString))
+                using (SqlConnection conn = new SqlConnection(Function.connectionString))
                 {
                     conn.Open();
 
