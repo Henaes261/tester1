@@ -23,7 +23,6 @@ namespace QLXM
             try
             {
                 Function.connect();
-                MessageBox.Show("Ket noi thanh cong");
             }
             catch (Exception ex)
             {
