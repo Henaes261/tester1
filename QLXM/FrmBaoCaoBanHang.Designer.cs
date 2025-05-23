@@ -297,11 +297,11 @@ namespace QLXM
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Times New Roman", 16.125F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Font = new System.Drawing.Font("Times New Roman", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.Black;
             this.label1.Location = new System.Drawing.Point(360, 35);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(352, 37);
+            this.label1.Size = new System.Drawing.Size(343, 36);
             this.label1.TabIndex = 20;
             this.label1.Text = "BÁO CÁO BÁN HÀNG";
             // 
@@ -357,3 +357,4 @@ namespace QLXM
         private System.Windows.Forms.Label label1;
     }
 }
+
