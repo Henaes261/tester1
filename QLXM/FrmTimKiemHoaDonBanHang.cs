@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Windows.Forms;
 
@@ -32,7 +32,7 @@ namespace QLXM
 
         private void Load_DonDatHang()
         {
-            string sql = "SELECT d.soddh, nv.tennv, kh.tenkhach,d.ngaynmua, d.datcoc, d.thue, d.tongtien " +
+            string sql = "SELECT d.soddh, nv.tennv, kh.tenkhach,d.ngaymua, d.datcoc, d.thue, d.tongtien " +
                          "FROM tbldondathang d " +
                          "INNER JOIN tblnhanvien nv ON d.manv = nv.manv " +
                          "INNER JOIN tblkhachhang kh ON d.makhach = kh.makhach";
@@ -45,7 +45,7 @@ namespace QLXM
         private void Format_DataGridView()
         {
             dataGridView1.Columns["soddh"].HeaderText = "Số HĐ";
-            dataGridView1.Columns["ngaynmua"].HeaderText = "Ngày Bán";
+            dataGridView1.Columns["ngaymua"].HeaderText = "Ngày Bán";
             dataGridView1.Columns["datcoc"].HeaderText = "Đặt Cọc";
             dataGridView1.Columns["thue"].HeaderText = "Thuế (%)";
             dataGridView1.Columns["tongtien"].HeaderText = "Tổng Tiền";
@@ -70,7 +70,7 @@ namespace QLXM
         {
             string sohd = txtSoHoaDon.Text.Trim();
 
-            string sql = "SELECT d.soddh, d.ngaynmua, d.datcoc, d.thue, d.tongtien, nv.tennv, kh.tenkhach " +
+            string sql = "SELECT d.soddh, d.ngaymua, d.datcoc, d.thue, d.tongtien, nv.tennv, kh.tenkhach " +
                          "FROM tbldondathang d " +
                          "INNER JOIN tblnhanvien nv ON d.manv = nv.manv " +
                          "INNER JOIN tblkhachhang kh ON d.makhach = kh.makhach " +
@@ -123,7 +123,7 @@ namespace QLXM
                 txtThue.Text = string.Format("{0:N0}", row.Cells["thue"].Value);
                 txtTongTien.Text = string.Format("{0:N0}", row.Cells["tongtien"].Value);
 
-                if (DateTime.TryParse(row.Cells["ngaynmua"].Value?.ToString(), out DateTime ngayban))
+                if (DateTime.TryParse(row.Cells["ngaymua"].Value?.ToString(), out DateTime ngayban))
                 {
                     dateNgayBan.Value = ngayban;
                     dateNgayBan.CustomFormat = "dd/MM/yyyy";
