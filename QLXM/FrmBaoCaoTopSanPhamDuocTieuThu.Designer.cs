@@ -1,4 +1,4 @@
-﻿namespace QLXM
+namespace QLXM
 {
     partial class FrmBaoCaoTopSanPhamDuocTieuThu
     {
