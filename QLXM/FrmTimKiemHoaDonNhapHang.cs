@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -31,6 +31,11 @@ namespace QLXM
             for (int i = 2020; i <= DateTime.Now.Year; i++) cboNam.Items.Add(i.ToString());
             cboNam.SelectedIndex = -1;
             btnTimlai.Enabled = false;
+
+            // Load dữ liệu ban đầu và hiển thị
+            LoadAllHoaDonNhap();
+            dataGridView1.DataSource = hoadonnhap; // Gán DataSource trước
+            Load_DataGridView();
         }
         private void ResetValues()
         {
@@ -40,22 +45,48 @@ namespace QLXM
             cboMaHDN.Focus();
         }
 
+        private void LoadAllHoaDonNhap()
+        {
+            string sql = "SELECT a.sohdn, a.ngaynhap, a.tongtien, a.manv, nv.tennv, a.mancc, ncc.tenncc " +
+                 "FROM tblhoadonnhap a " +
+                 "JOIN tblnhanvien nv ON a.manv = nv.manv " +
+                 "JOIN tblnhacungcap ncc ON a.mancc = ncc.mancc";
+            hoadonnhap = Function.GetDataToTable(sql);
+        }
+
         private void btnTimkiem_Click(object sender, EventArgs e)
         {
-            string sql;
-            if ((cboMaHDN.Text == "") && (cboThang.Text == "") && (cboNam.Text == "") &&
-               (cboMaNV.Text == "") && (cboMaNCC.Text == ""))
+            if (cboMaHDN.Text == "" && cboThang.Text == "" && cboNam.Text == "" &&
+        cboMaNV.Text == "" && cboMaNCC.Text == "")
             {
                 MessageBox.Show("Hãy nhập một điều kiện tìm kiếm!!!", "Yêu cầu ...", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            sql = "SELECT distinct a.* FROM tblhoadonnhap a join tblchitiethdn b on a.sohdn=b.sohdn WHERE 1=1";
-            if (cboMaHDN.Text != "")
-                sql = sql + " AND a.sohdn Like N'" + cboMaHDN.Text + "'";
-            if (cboThang.Text != "")
+
+            var rows = hoadonnhap.AsEnumerable();
+
+            if (!string.IsNullOrEmpty(cboMaHDN.Text))
             {
-                if ((Convert.ToInt32(cboThang.Text) < 13) && (Convert.ToInt32(cboThang.Text) > 0))
-                    sql = sql + " AND MONTH(ngaynhap) =" + cboThang.Text;
+                rows = rows.Where(r => r.Field<string>("sohdn").Contains(cboMaHDN.Text));
+            }
+
+            if (!string.IsNullOrEmpty(cboMaNCC.Text))
+            {
+                rows = rows.Where(r => r.Field<string>("mancc").Contains(cboMaNCC.Text));
+            }
+
+            if (!string.IsNullOrEmpty(cboMaNV.Text))
+            {
+                rows = rows.Where(r => r.Field<string>("manv").Contains(cboMaNV.Text));
+            }
+
+            if (!string.IsNullOrEmpty(cboThang.Text))
+            {
+                int thang;
+                if (int.TryParse(cboThang.Text, out thang) && thang >= 1 && thang <= 12)
+                {
+                    rows = rows.Where(r => r.Field<DateTime>("ngaynhap").Month == thang);
+                }
                 else
                 {
                     MessageBox.Show("Bạn nhập sai tháng, hãy nhập lại", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -64,10 +95,14 @@ namespace QLXM
                     return;
                 }
             }
-            if (cboNam.Text != "")
+
+            if (!string.IsNullOrEmpty(cboNam.Text))
             {
-                if ((Convert.ToInt32(cboNam.Text) >= 2020) && (Convert.ToInt32(cboNam.Text) <= DateTime.Today.Year))
-                    sql = sql + " AND YEAR(ngaynhap) =" + cboNam.Text;
+                int nam;
+                if (int.TryParse(cboNam.Text, out nam) && nam >= 2020 && nam <= DateTime.Today.Year)
+                {
+                    rows = rows.Where(r => r.Field<DateTime>("ngaynhap").Year == nam);
+                }
                 else
                 {
                     MessageBox.Show("Bạn nhập sai năm, hãy nhập lại\n Cửa hàng mở từ năm 2020, vui lòng không nhập các năm trước đó", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -76,30 +111,27 @@ namespace QLXM
                     return;
                 }
             }
-            if (cboMaNV.Text != "")
-                sql = sql + " AND manv Like N'" + cboMaNV.Text + "'";
-            if (cboMaNCC.Text != "")
-                sql = sql + " AND mancc Like N'" + cboMaNCC.Text + "'";
 
-            hoadonnhap = Function.GetDataToTable(sql);
-            if (hoadonnhap.Rows.Count == 0)
+            DataTable filtered = rows.Any() ? rows.CopyToDataTable() : hoadonnhap.Clone();
+
+            if (filtered.Rows.Count == 0)
             {
-                MessageBox.Show("Không có bản ghi thỏa mãn điều kiện!!!", "Thông báo",
-MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                ResetValues();
+                MessageBox.Show("Không có bản ghi thỏa mãn điều kiện!!!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                dataGridView1.DataSource = filtered;
                 return;
             }
             else
             {
-                MessageBox.Show("Có " + hoadonnhap.Rows.Count + " bản ghi thỏa mãn điều kiện!!!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                dataGridView1.DataSource = hoadonnhap;
-                Load_DataGridView();
+                MessageBox.Show("Có " + filtered.Rows.Count + " bản ghi thỏa mãn điều kiện!!!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                dataGridView1.DataSource = filtered;
             }
+
             foreach (Control Ctl in this.Controls)
                 if ((Ctl is TextBox) || (Ctl is ComboBox))
                     Ctl.Enabled = false;
-            btnTimlai.Enabled = true;
+
             btnTimkiem.Enabled = false;
+            btnTimlai.Enabled = true;
         }
         private void Load_DataGridView()
         {
@@ -107,12 +139,12 @@ MessageBoxButtons.OK, MessageBoxIcon.Warning);
             dataGridView1.Columns[1].HeaderText = "Ngày nhập";
             dataGridView1.Columns[2].HeaderText = "Tổng tiền";
             dataGridView1.Columns[3].HeaderText = "Mã nhân viên";
-            dataGridView1.Columns[4].HeaderText = "Mã nhà cung cấp";
+            dataGridView1.Columns[4].HeaderText = "Tên NCC";
             dataGridView1.Columns[0].Width = 150;
             dataGridView1.Columns[1].Width = 100;
             dataGridView1.Columns[2].Width = 80;
-            dataGridView1.Columns[3].Width = 80;
-            dataGridView1.Columns[4].Width = 80;
+            dataGridView1.Columns[3].Width = 150;
+            dataGridView1.Columns[4].Width = 150;
             dataGridView1.AllowUserToAddRows = false;
             dataGridView1.EditMode = DataGridViewEditMode.EditProgrammatically;
         }
@@ -126,6 +158,10 @@ MessageBoxButtons.OK, MessageBoxIcon.Warning);
             dataGridView1.DataSource = null;
             btnTimlai.Enabled = false;
             btnTimkiem.Enabled = true;
+
+            // Load lại toàn bộ dữ liệu
+            LoadAllHoaDonNhap();
+            dataGridView1.DataSource = hoadonnhap;
         }
 
         private void btnDong_Click(object sender, EventArgs e)
