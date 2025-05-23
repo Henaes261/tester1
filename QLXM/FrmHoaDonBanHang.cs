@@ -91,7 +91,6 @@ namespace QLXM
             cboMaKH.Text = Function.GetFieldValues(str);
             str = "SELECT tongtien FROM tbldondathang WHERE soddh = N'" + txtsoddh.Text + "'";
             txtTongtien.Text = Function.GetFieldValues(str);
-            lblBangchu.Text = "Bằng chữ: " + Function.ChuyenSoSangChu(txtTongtien.Text);
             str = "SELECT thue FROM tbldondathang WHERE soddh = N'" + txtsoddh.Text + "'";
             txtThue.Text = Function.GetFieldValues(str);
             str = "SELECT datcoc FROM tbldondathang WHERE soddh = N'" + txtsoddh.Text + "'";
@@ -145,7 +144,7 @@ namespace QLXM
             sql = "UPDATE tbldondathang SET tongtien = " + tongmoi + " WHERE soddh = N'" + Mahoadon + "'";
             Function.runsql(sql);
             txtTongtien.Text = tongmoi.ToString();
-            lblBangchu.Text = "Bằng chữ: " + Function.ChuyenSoSangChu(tongmoi.ToString());
+            
         }
         public string soddh
         {
@@ -336,7 +335,6 @@ namespace QLXM
             exRange.Range["A1:F1"].Font.Bold = true;
             exRange.Range["A1:F1"].Font.Italic = true;
             exRange.Range["A1:F1"].HorizontalAlignment = COMExcel.XlHAlign.xlHAlignRight;
-            exRange.Range["A1:F1"].Value = "Bằng chữ: " + Function.ChuyenSoSangChu(tblThongtinHD.Rows[0][2].ToString());
             exRange = exSheet.Cells[cot][hang + 17];
             exRange.Font.Bold = true;
             exRange.Value2 = "Đặt cọc:";
@@ -543,7 +541,6 @@ namespace QLXM
             sql = "UPDATE tbldondathang SET TongTien =" + tongmoi + " WHERE soddh = N'" + txtsoddh.Text + "'";
             Function.runsql(sql);
             txtTongtien.Text = tongmoi.ToString();
-            lblBangchu.Text = "Bằng chữ: " + Function.ChuyenSoSangChu(tongmoi.ToString());
             thue = Convert.ToDouble(Function.GetFieldValues("SELECT thue FROM tbldondathang WHERE soddh = N'" + txtsoddh.Text + "'"));
             thuemoi = thue + Convert.ToDouble(txtThanhtien.Text) * 0.1;
             sql = "UPDATE tbldondathang SET thue =" + thuemoi + " WHERE soddh = N'" + txtsoddh.Text + "'";
