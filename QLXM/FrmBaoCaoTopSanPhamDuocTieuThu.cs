@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -82,7 +82,7 @@ namespace QLXM
                     return;
                 }
 
-                dk = $"WHERE MONTH(ngaynmua) = {thang} AND YEAR(ngaynmua) = {nam}";
+                dk = $"WHERE MONTH(ngaymua) = {thang} AND YEAR(ngaymua) = {nam}";
             }
 
             chart1.Visible = true;
