@@ -112,6 +112,7 @@ namespace QLXM
             btnThem.Enabled = false;
             ResetValues();
             txtsohdn.Text = Function.CreateKey("HDN");
+            txtNgay.Text = DateTime.Now.ToString("dd/MM/yyyy");
             Load_DataGridView();
         }
 
@@ -225,33 +226,7 @@ namespace QLXM
             txtGiamgia.Text = "0";
             txtThanhtien.Text = "0";
         }
-        private void DelHang(string Mahoadon, string Mahang)
-        {
-            Double s, sl, SLcon;
-            string sql;
-            sql = "SELECT soluong FROM tblchitiethdn WHERE sohdn = N'" + Mahoadon + "' AND mahang=N'" + Mahang + "'";
-            s = Convert.ToDouble(Function.GetFieldValues(sql));
-            sql = "DELETE tblchitiethdn WHERE sohdn=N'" + Mahoadon + "' AND mahang = N'" + Mahang + "'";
-            Function.RunSqlDel(sql);
-            // Cập nhật lại số lượng cho các mặt hàng
-            sql = "SELECT soluong FROM tbldmhang WHERE mahang = N'" + Mahang + "'";
-            sl = Convert.ToDouble(Function.GetFieldValues(sql));
-            SLcon = sl - s;
-            sql = "UPDATE tbldmhang SET soluong =" + SLcon + " WHERE mahang= N'" + Mahang + "'";
-            Function.runsql(sql);
-        }
-        private void DelUpdateTongtien(string Mahoadon, double Thanhtien)
-        {
-            Double Tong, Tongmoi;
-            string sql;
-            sql = "SELECT tongtien FROM tblhoadonnhap WHERE sohdn = N'" + Mahoadon + "'";
-            Tong = Convert.ToDouble(Function.GetFieldValues(sql));
-            Tongmoi = Tong - Thanhtien;
-            sql = "UPDATE tblhoadonnhap SET tongtien =" + Tongmoi + " WHERE sohdn = N'" + Mahoadon + "'";
-            Function.runsql(sql);
-            txtTongtien.Text = Tongmoi.ToString();
-        }
-
+        
         private void cboMaNV_TextChanged(object sender, EventArgs e)
         {
             string str;
@@ -512,71 +487,6 @@ namespace QLXM
 
         }
 
-        private void toolTip1_Popup(object sender, PopupEventArgs e)
-        {
-
-        }
-
-        private void toolTip2_Popup(object sender, PopupEventArgs e)
-        {
-
-        }
-
-        private void toolTip4_Popup(object sender, PopupEventArgs e)
-        {
-
-        }
-
-        private void toolTip5_Popup(object sender, PopupEventArgs e)
-        {
-
-        }
-
-        private void toolTip7_Popup(object sender, PopupEventArgs e)
-        {
-
-        }
-
-        private void toolTip8_Popup(object sender, PopupEventArgs e)
-        {
-
-        }
-
-        private void toolTip9_Popup(object sender, PopupEventArgs e)
-        {
-
-        }
-
-        private void toolTip10_Popup(object sender, PopupEventArgs e)
-        {
-
-        }
-
-        private void toolTip11_Popup(object sender, PopupEventArgs e)
-        {
-
-        }
-
-        private void toolTip12_Popup(object sender, PopupEventArgs e)
-        {
-
-        }
-
-        private void toolTip13_Popup(object sender, PopupEventArgs e)
-        {
-
-        }
-
-        private void toolTip14_Popup(object sender, PopupEventArgs e)
-        {
-
-        }
-
-        private void toolTip15_Popup(object sender, PopupEventArgs e)
-        {
-
-        }
-
         private void txtNgay_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (((e.KeyChar >= '0') && (e.KeyChar <= '9')) || (Convert.ToInt32(e.KeyChar) == 8) || (e.KeyChar == '/'))
@@ -600,11 +510,39 @@ namespace QLXM
             txtThanhtien.Text = dataGridView1.CurrentRow.Cells["thanhtien"].Value.ToString();
         }
 
+        private void DelHang(string Mahoadon, string Mahang)
+        {
+            Double s, sl, SLcon;
+            string sql;
+            sql = "SELECT soluong FROM tblchitiethdn WHERE sohdn = N'" + Mahoadon + "' AND mahang=N'" + Mahang + "'";
+            s = Convert.ToDouble(Function.GetFieldValues(sql));
+            sql = "DELETE FROM tblchitiethdn WHERE sohdn=N'" + Mahoadon + "' AND mahang = N'" + Mahang + "'";
+            Function.RunSqlDel(sql);
+            // Cập nhật lại số lượng cho các mặt hàng
+            sql = "SELECT soluong FROM tbldmhang WHERE mahang = N'" + Mahang + "'";
+            sl = Convert.ToDouble(Function.GetFieldValues(sql));
+            SLcon = sl - s;
+            sql = "UPDATE tbldmhang SET soluong =" + SLcon + " WHERE mahang= N'" + Mahang + "'";
+            Function.runsql(sql);
+        }
+
+        private void DelUpdateTongtien(string Mahoadon, double Thanhtien)
+        {
+            Double Tong, Tongmoi;
+            string sql;
+            sql = "SELECT tongtien FROM tblhoadonnhap WHERE sohdn = N'" + Mahoadon + "'";
+            Tong = Convert.ToDouble(Function.GetFieldValues(sql));
+            Tongmoi = Tong - Thanhtien;
+            sql = "UPDATE tblhoadonnhap SET tongtien =" + Tongmoi + " WHERE sohdn = N'" + Mahoadon + "'";
+            Function.runsql(sql);
+            txtTongtien.Text = Tongmoi.ToString();
+        }
+
         private void btnXoa_Click_1(object sender, EventArgs e)
         {
             if (MessageBox.Show("Bạn có chắc chắn muốn xóa không?", "Thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                string[] Mahang = new string[20];
+                string[] mahang = new string[20];
                 string sql;
                 int n = 0;
                 int i;
@@ -613,13 +551,13 @@ namespace QLXM
                 SqlDataReader reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
-                    Mahang[n] = reader.GetString(0).ToString();
+                    mahang[n] = reader.GetString(0).ToString();
                     n = n + 1;
                 }
                 reader.Close();
                 //Xóa danh sách các mặt hàng của hóa đơn
                 for (i = 0; i <= n - 1; i++)
-                    DelHang(txtsohdn.Text, Mahang[i]);
+                    DelHang(txtsohdn.Text, mahang[i]);
                 //Xóa hóa đơn
                 sql = "DELETE tblhoadonnhap WHERE sohdn=N'" + txtsohdn.Text + "'";
                 Function.RunSqlDel(sql);
@@ -628,7 +566,24 @@ namespace QLXM
                 btnIn.Enabled = false;
             }
         }
+
+        private void dataGridView1_DoubleClick(object sender, EventArgs e)
+        {
+            string mahang;
+            double thanhtien;
+            if ((MessageBox.Show("Bạn có chắc chắn muốn xóa không?", "Thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes))
+            {
+                // Xóa hàng và cập nhật lại số lượng hàng 
+                mahang = dataGridView1.CurrentRow.Cells["mahang"].Value.ToString();
+                DelHang(txtsohdn.Text, mahang);
+                // Cập nhật lại tổng tiền cho hóa đơn bán
+                thanhtien = Convert.ToDouble(dataGridView1.CurrentRow.Cells["thanhtien"].Value.ToString());
+                DelUpdateTongtien(txtsohdn.Text, thanhtien);
+                Load_DataGridView();
+            }
+        }
     }
 }
+
 
 
