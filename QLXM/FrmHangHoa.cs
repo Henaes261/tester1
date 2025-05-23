@@ -115,7 +115,7 @@ namespace QLXM
             txtAnh.Text = Function.GetFieldValues("SELECT anh FROM tbldmhang WHERE mahang = N'" + txtMaHang.Text + "'");
 
             string fileName = txtAnh.Text;
-            string fullPath = Path.Combine(@"C:\Users\Admin\Downloads\QLXM\ảnh", fileName);
+            string fullPath = Path.Combine(@"C:\Users\TTT\Downloads\tester1-master\tester1-master\QLXM\ảnh", fileName);
 
             if (File.Exists(fullPath))
             {
