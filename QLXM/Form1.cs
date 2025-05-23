@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -85,30 +85,6 @@ namespace QLXM
             frm.Show();
         }
 
-        private void tìmKiếmHoáĐơnNhậpToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            FrmTimKiemHoaDonNhapHang frm = new FrmTimKiemHoaDonNhapHang();
-            frm.Show();
-        }
-
-        private void tìmKiếmHoáĐơnBánHàngToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            FrmTimKiemHoaDonBanHang frm = new FrmTimKiemHoaDonBanHang();
-            frm.Show();
-        }
-
-        private void tìmKiếmKháchHàngToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            FrmTimKiemKhachHang frm = new FrmTimKiemKhachHang();
-            frm.Show();
-        }
-
-        private void tìmKiếmHàngHoáToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            FrmTimKiemHangHoa frm = new FrmTimKiemHangHoa();
-            frm.Show();
-        }
-
         private void báoCáoNhậpHàngToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FrmBaoCaoNhapHang frm = new FrmBaoCaoNhapHang();
@@ -121,18 +97,6 @@ namespace QLXM
             frm.Show();
         }
 
-        private void báoCáoKếtQuảHoạtĐộngKinhDoanhToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            FrmBaoCaoKetQuaHoatDongKinhDoanh frm = new FrmBaoCaoKetQuaHoatDongKinhDoanh();
-            frm.Show();
-        }
-
-        private void báoCáoTopSảnPhẩmĐượcTiêuThụToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            FrmBaoCaoTopSanPhamDuocTieuThu frm = new FrmBaoCaoTopSanPhamDuocTieuThu();
-            frm.Show();
-        }
-
         private void thoátToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("Bạn có muốn thoát không?", "Xác nhận",
@@ -140,6 +104,42 @@ namespace QLXM
             {
                 Application.Exit();
             }
+        }
+
+        private void báoCáoKQHĐKDToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FrmBaoCaoKetQuaHoatDongKinhDoanh frm = new FrmBaoCaoKetQuaHoatDongKinhDoanh();
+            frm.Show();
+        }
+
+        private void báoCáoTopSảnPhẩmTiêuThụToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FrmBaoCaoTopSanPhamDuocTieuThu frm = new FrmBaoCaoTopSanPhamDuocTieuThu();
+            frm.Show();
+        }
+
+        private void toáĐơnNhậpHàngToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FrmTimKiemHoaDonNhapHang frm = new FrmTimKiemHoaDonNhapHang();
+            frm.Show();
+        }
+
+        private void hoáĐơnBánHàngToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            FrmTimKiemHoaDonBanHang frm = new FrmTimKiemHoaDonBanHang();
+            frm.Show();
+        }
+
+        private void kháchHàngToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            FrmTimKiemKhachHang frm = new FrmTimKiemKhachHang();
+            frm.Show();
+        }
+
+        private void hàngHoáToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            FrmTimKiemHangHoa frm = new FrmTimKiemHangHoa();
+            frm.Show();
         }
     }
 }
