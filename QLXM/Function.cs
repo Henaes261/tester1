@@ -13,11 +13,11 @@ namespace QLXM
     public static class Function
     {
         public static SqlConnection conn;
-
+        public static string connectionString = @"Data Source=DESKTOP-670L4AT\SQLEXPRESS;Initial Catalog=QUANLYXEMAY;Integrated Security=True";
 
         public static void connect()
         {
-            string connectionString = @"Data Source = DESKTOP-670L4AT\SQLEXPRESS;Initial Catalog = QLXM;Integrated Security=True";
+            string connectionString = @"Data Source = DESKTOP-670L4AT\SQLEXPRESS;Initial Catalog = QUANLYXEMAY;Integrated Security=True";
             conn = new SqlConnection(connectionString);
             try
             {
