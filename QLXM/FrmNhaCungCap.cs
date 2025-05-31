@@ -51,9 +51,21 @@ namespace QLXM
         private void btnThem_Click(object sender, EventArgs e)
         {
             ResetValues();
+
             txtMaNCC.Text = Function.CreateKey("NCC");
+            txtTenNCC.Enabled = true;
+            txtDiaChi.Enabled = true;
+            mskSDT.Enabled = true;
+
+            btnLuu.Enabled = true;
+            btnSua.Enabled = false;
+            btnXoa.Enabled = false;
+            btnTimkiem.Enabled = false;
+            btnThoat.Enabled = false;
+
             txtTenNCC.Focus();
         }
+
 
         private void btnLuu_Click(object sender, EventArgs e)
         {
