@@ -99,9 +99,26 @@ namespace QLXM
             btnXoa.Enabled = false;
             btnBoQua.Enabled = true;
             btnThem.Enabled = false;
-            btnLuu.Enabled = true;
-            txtmanhanvien.Enabled = true;
+            btnLuu.Enabled = true;      
             txtmanhanvien.Focus();
+            txtmanhanvien.Enabled = false; 
+            txtmanhanvien.Text = TaoMaNhanVienTuDong(); 
+        }
+        private string TaoMaNhanVienTuDong()
+        {
+            string sql = "SELECT TOP 1 manv FROM tblnhanvien ORDER BY manv DESC";
+            DataTable dt = Function.GetDataToTable(sql);
+            if (dt.Rows.Count == 0)
+            {
+                return "NV001";
+            }
+            else
+            {
+                string manvcu = dt.Rows[0][0].ToString();
+                int so = int.Parse(manvcu.Substring(2)); 
+                so++;
+                return "NV" + so.ToString("D3"); 
+            }
         }
 
         private void btnBoQua_Click(object sender, EventArgs e)
