@@ -56,41 +56,112 @@ namespace QLXM
 
         private void btnThem_Click(object sender, EventArgs e)
         {
-            ResetValues();
-            txtMaKH.Text = Function.CreateKey("KH");
-            txtHoten.Focus();
-        }
-
-        private void btnLuu_Click(object sender, EventArgs e)
-        {
             if (txtMaKH.Text == "" || txtHoten.Text == "")
             {
                 MessageBox.Show("Bạn phải nhập đầy đủ thông tin!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            string sql = "INSERT INTO tblkhachhang (makhach, tenkhach, sdt, diachi) " +
-                         "VALUES (N'" + txtMaKH.Text + "', N'" + txtHoten.Text + "', '" + mskSDT.Text + "', N'" + txtDiaChi.Text + "')";
-            Function.runsql(sql);
-            Load_DataGridView();
+            // Kiểm tra trùng mã
+            foreach (DataRow row in tblKhachHang.Rows)
+            {
+                if (row["makhach"].ToString() == txtMaKH.Text)
+                {
+                    MessageBox.Show("Mã khách hàng đã tồn tại trong danh sách!", "Cảnh báo");
+                    return;
+                }
+            }
+
+            // Thêm vào bảng tạm (DataTable)
+            DataRow newRow = tblKhachHang.NewRow();
+            newRow["makhach"] = txtMaKH.Text;
+            newRow["tenkhach"] = txtHoten.Text;
+            newRow["sdt"] = mskSDT.Text;
+            newRow["diachi"] = txtDiaChi.Text;
+            tblKhachHang.Rows.Add(newRow);
+
+            dataGridView1.DataSource = tblKhachHang;
+            ResetValues();
         }
+
+
+        private void btnLuu_Click(object sender, EventArgs e)
+        {
+            int soDongLuu = 0;
+
+            // Duyệt từng dòng trong DataTable đang hiển thị
+            foreach (DataRow row in tblKhachHang.Rows)
+            {
+                string maKH = row["makhach"].ToString().Trim();
+
+                // Câu lệnh kiểm tra xem đã tồn tại trong CSDL chưa
+                string sqlCheck = "SELECT * FROM tblkhachhang WHERE makhach = N'" + maKH + "'";
+
+                if (!Function.CheckKey(sqlCheck))
+                {
+                    // Nếu chưa tồn tại, thêm vào CSDL
+                    string sqlInsert = "INSERT INTO tblkhachhang (makhach, tenkhach, sdt, diachi) VALUES " +
+                                       "(N'" + row["makhach"] + "', N'" + row["tenkhach"] + "', '" + row["sdt"] + "', N'" + row["diachi"] + "')";
+                    Function.runsql(sqlInsert);
+                    soDongLuu++;
+                }
+            }
+
+            if (soDongLuu > 0)
+            {
+                MessageBox.Show("Đã lưu " + soDongLuu + " khách hàng mới vào CSDL!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show("Không có khách hàng nào mới cần lưu!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
+            // Nạp lại dữ liệu từ CSDL để hiển thị đúng nhất
+            Load_DataGridView();
+            ResetValues();
+        }
+
+
 
         private void btnXoa_Click(object sender, EventArgs e)
         {
-            if (txtMaKH.Text == "")
+            if (txtMaKH.Text.Trim() == "")
             {
-                MessageBox.Show("Bạn chưa chọn khách hàng để xóa!", "Thông báo");
+                MessageBox.Show("Bạn chưa chọn khách hàng để xóa!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            if (MessageBox.Show("Bạn có chắc chắn muốn xóa?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            string maKH = txtMaKH.Text.Trim();
+
+            DialogResult result = MessageBox.Show("Bạn có chắc chắn muốn xóa khách hàng này?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (result == DialogResult.Yes)
             {
-                string sql = "DELETE FROM tblkhachhang WHERE makhach = N'" + txtMaKH.Text + "'";
-                Function.RunSqlDel(sql);
-                Load_DataGridView();
-                ResetValues();
+                try
+                {
+                    // Xóa chi tiết đơn đặt hàng trước (liên quan tới các đơn của khách)
+                    Function.RunSqlDel($@"
+                DELETE FROM tblchitietddh 
+                WHERE soddh IN (SELECT soddh FROM tbldondathang WHERE makhach = N'{maKH}')");
+
+                    // Xóa đơn đặt hàng
+                    Function.RunSqlDel($"DELETE FROM tbldondathang WHERE makhach = N'{maKH}'");
+
+                    // Xóa khách hàng
+                    Function.RunSqlDel($"DELETE FROM tblkhachhang WHERE makhach = N'{maKH}'");
+
+                    Load_DataGridView();
+                    ResetValues();
+                    MessageBox.Show("Xóa khách hàng thành công.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Lỗi khi xóa: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
+
+
+
 
         private void btnSua_Click(object sender, EventArgs e)
         {
@@ -134,7 +205,6 @@ namespace QLXM
                 try
                 {
                     DataGridViewRow row = dataGridView1.Rows[e.RowIndex];
-
                     txtMaKH.Text = row.Cells["makhach"].Value?.ToString() ?? "";
                     txtHoten.Text = row.Cells["tenkhach"].Value?.ToString() ?? "";
                     txtDiaChi.Text = row.Cells["diachi"].Value?.ToString() ?? "";
