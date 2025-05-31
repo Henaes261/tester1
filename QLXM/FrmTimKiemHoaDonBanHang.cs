@@ -44,33 +44,49 @@ namespace QLXM
 
         private void Format_DataGridView()
         {
-            dataGridView1.Columns["soddh"].HeaderText = "Số HĐ";
-            dataGridView1.Columns["ngaymua"].HeaderText = "Ngày Bán";
-            dataGridView1.Columns["datcoc"].HeaderText = "Đặt Cọc";
-            dataGridView1.Columns["thue"].HeaderText = "Thuế (%)";
-            dataGridView1.Columns["tongtien"].HeaderText = "Tổng Tiền";
-            dataGridView1.Columns["tennv"].HeaderText = "Nhân Viên";
-            dataGridView1.Columns["tenkhach"].HeaderText = "Khách Hàng";
+            if (dataGridView1.Columns["soddh"] != null)
+                dataGridView1.Columns["soddh"].HeaderText = "Số HĐ";
 
-            // Format có dấu chấm
-            dataGridView1.Columns["tongtien"].DefaultCellStyle.Format = "N0";
-            dataGridView1.Columns["datcoc"].DefaultCellStyle.Format = "N0";
-            dataGridView1.Columns["thue"].DefaultCellStyle.Format = "N0";
+            if (dataGridView1.Columns["ngaymua"] != null)
+                dataGridView1.Columns["ngaymua"].HeaderText = "Ngày Bán";
 
-            // Căn phải các số
-            dataGridView1.Columns["tongtien"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            dataGridView1.Columns["datcoc"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            dataGridView1.Columns["thue"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            if (dataGridView1.Columns["datcoc"] != null)
+            {
+                dataGridView1.Columns["datcoc"].HeaderText = "Đặt Cọc";
+                dataGridView1.Columns["datcoc"].DefaultCellStyle.Format = "N0";
+                dataGridView1.Columns["datcoc"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            }
+
+            if (dataGridView1.Columns["thue"] != null)
+            {
+                dataGridView1.Columns["thue"].HeaderText = "Thuế (%)";
+                dataGridView1.Columns["thue"].DefaultCellStyle.Format = "N0";
+                dataGridView1.Columns["thue"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            }
+
+            if (dataGridView1.Columns["tongtien"] != null)
+            {
+                dataGridView1.Columns["tongtien"].HeaderText = "Tổng Tiền";
+                dataGridView1.Columns["tongtien"].DefaultCellStyle.Format = "N0";
+                dataGridView1.Columns["tongtien"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            }
+
+            if (dataGridView1.Columns["tennv"] != null)
+                dataGridView1.Columns["tennv"].HeaderText = "Nhân Viên";
+
+            if (dataGridView1.Columns["tenkhach"] != null)
+                dataGridView1.Columns["tenkhach"].HeaderText = "Khách Hàng";
 
             dataGridView1.ReadOnly = true;
             dataGridView1.AllowUserToAddRows = false;
         }
 
+
         private void btnTimKiem_Click(object sender, EventArgs e)
         {
             string sohd = txtSoHoaDon.Text.Trim();
 
-            string sql = "SELECT d.soddh, d.ngaymua, d.datcoc, d.thue, d.tongtien, nv.tennv, kh.tenkhach " +
+            string sql = "SELECT d.soddh, d.ngaynmua, d.datcoc, d.thue, d.tongtien, nv.tennv, kh.tenkhach " +
                          "FROM tbldondathang d " +
                          "INNER JOIN tblnhanvien nv ON d.manv = nv.manv " +
                          "INNER JOIN tblkhachhang kh ON d.makhach = kh.makhach " +
@@ -124,6 +140,7 @@ namespace QLXM
                 txtTongTien.Text = string.Format("{0:N0}", row.Cells["tongtien"].Value);
 
                 if (DateTime.TryParse(row.Cells["ngaymua"].Value?.ToString(), out DateTime ngayban))
+
                 {
                     dateNgayBan.Value = ngayban;
                     dateNgayBan.CustomFormat = "dd/MM/yyyy";
