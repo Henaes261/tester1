@@ -86,7 +86,7 @@ namespace QLXM
         {
             string sohd = txtSoHoaDon.Text.Trim();
 
-            string sql = "SELECT d.soddh, d.ngaynmua, d.datcoc, d.thue, d.tongtien, nv.tennv, kh.tenkhach " +
+            string sql = "SELECT d.soddh, d.ngaymua, d.datcoc, d.thue, d.tongtien, nv.tennv, kh.tenkhach " +
                          "FROM tbldondathang d " +
                          "INNER JOIN tblnhanvien nv ON d.manv = nv.manv " +
                          "INNER JOIN tblkhachhang kh ON d.makhach = kh.makhach " +
