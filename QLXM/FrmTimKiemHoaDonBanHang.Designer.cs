@@ -44,7 +44,7 @@ namespace QLXM
             // 
             this.txtSoHoaDon.Location = new System.Drawing.Point(164, 67);
             this.txtSoHoaDon.Name = "txtSoHoaDon";
-            this.txtSoHoaDon.Size = new System.Drawing.Size(172, 28);
+            this.txtSoHoaDon.Size = new System.Drawing.Size(172, 21);
             this.txtSoHoaDon.TabIndex = 0;
             // 
             // txtDatCoc
@@ -52,7 +52,7 @@ namespace QLXM
             this.txtDatCoc.Location = new System.Drawing.Point(490, 70);
             this.txtDatCoc.Name = "txtDatCoc";
             this.txtDatCoc.ReadOnly = true;
-            this.txtDatCoc.Size = new System.Drawing.Size(100, 28);
+            this.txtDatCoc.Size = new System.Drawing.Size(100, 21);
             this.txtDatCoc.TabIndex = 1;
             // 
             // txtThue
@@ -60,7 +60,7 @@ namespace QLXM
             this.txtThue.Location = new System.Drawing.Point(490, 110);
             this.txtThue.Name = "txtThue";
             this.txtThue.ReadOnly = true;
-            this.txtThue.Size = new System.Drawing.Size(100, 28);
+            this.txtThue.Size = new System.Drawing.Size(100, 21);
             this.txtThue.TabIndex = 2;
             // 
             // txtTongTien
@@ -68,24 +68,24 @@ namespace QLXM
             this.txtTongTien.Location = new System.Drawing.Point(490, 150);
             this.txtTongTien.Name = "txtTongTien";
             this.txtTongTien.ReadOnly = true;
-            this.txtTongTien.Size = new System.Drawing.Size(100, 28);
+            this.txtTongTien.Size = new System.Drawing.Size(100, 21);
             this.txtTongTien.TabIndex = 3;
             // 
             // cboMaNV
             // 
             this.cboMaNV.DropDownStyle = System.Windows.Forms.ComboBoxStyle.Simple;
-            this.cboMaNV.Location = new System.Drawing.Point(164, 101);
+            this.cboMaNV.Location = new System.Drawing.Point(164, 105);
             this.cboMaNV.Name = "cboMaNV";
-            this.cboMaNV.Size = new System.Drawing.Size(172, 43);
+            this.cboMaNV.Size = new System.Drawing.Size(172, 26);
             this.cboMaNV.TabIndex = 4;
             // 
             // cboMaKH
             // 
             this.cboMaKH.DropDownStyle = System.Windows.Forms.ComboBoxStyle.Simple;
             this.cboMaKH.ForeColor = System.Drawing.Color.Black;
-            this.cboMaKH.Location = new System.Drawing.Point(164, 150);
+            this.cboMaKH.Location = new System.Drawing.Point(164, 148);
             this.cboMaKH.Name = "cboMaKH";
-            this.cboMaKH.Size = new System.Drawing.Size(172, 43);
+            this.cboMaKH.Size = new System.Drawing.Size(172, 25);
             this.cboMaKH.TabIndex = 5;
             // 
             // dataGridView1
@@ -198,7 +198,7 @@ namespace QLXM
             this.lblTieuDe.ForeColor = System.Drawing.Color.Black;
             this.lblTieuDe.Location = new System.Drawing.Point(106, 19);
             this.lblTieuDe.Name = "lblTieuDe";
-            this.lblTieuDe.Size = new System.Drawing.Size(512, 36);
+            this.lblTieuDe.Size = new System.Drawing.Size(330, 24);
             this.lblTieuDe.TabIndex = 20;
             this.lblTieuDe.Text = "TÌM KIẾM HÓA ĐƠN BÁN HÀNG";
             // 
@@ -209,12 +209,12 @@ namespace QLXM
             this.dateNgayBan.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.dateNgayBan.Location = new System.Drawing.Point(164, 201);
             this.dateNgayBan.Name = "dateNgayBan";
-            this.dateNgayBan.Size = new System.Drawing.Size(172, 28);
+            this.dateNgayBan.Size = new System.Drawing.Size(172, 21);
             this.dateNgayBan.TabIndex = 21;
             // 
             // FrmTimKiemHoaDonBanHang
             // 
-            this.ClientSize = new System.Drawing.Size(700, 506);
+            this.ClientSize = new System.Drawing.Size(700, 486);
             this.Controls.Add(this.dateNgayBan);
             this.Controls.Add(this.txtSoHoaDon);
             this.Controls.Add(this.txtDatCoc);
